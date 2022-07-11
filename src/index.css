@@ -1,0 +1,106 @@
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  border-width: 0;
+}
+
+html {
+  line-height: 1.5;
+  font-family: Arial;
+}
+
+h1 {
+  font-size: inherit;
+  font-weight: inherit;
+  margin: 0;
+}
+
+body {
+  background-color: #121213;
+  margin: 0;
+  line-height: inherit;
+}
+
+button {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  text-transform: none;
+}
+
+.main {
+  max-width: 32rem;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #3a3a3c;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.header > h1 {
+  color: white;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 800;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}
+
+.tile-grid {
+  display: grid;
+  width: 350px;
+  height: 420px;
+  grid-template-rows: repeat(6, minmax(0, 1fr));
+  gap: 0.25rem;
+  margin: 5rem auto;
+}
+
+.tile-row {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-gap: 0.25rem;
+}
+
+.tile-row > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  border: #3a3a3c 2px solid;
+  color: white;
+  font-weight: 600;
+}
+
+.keyboard {
+  margin: auto;
+}
+
+.keyboard-row {
+  display: flex;
+  color: white;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.keyboard-row > button {
+  border-radius: 4px;
+  background-color: #818384;
+  flex: 1;
+  height: 58px;
+}
+
+.keyboard-row #ENTER,
+#DELETE {
+  flex: 1.5;
+}

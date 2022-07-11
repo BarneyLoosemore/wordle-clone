@@ -1,0 +1,16 @@
+{
+  "name": "wordleclone",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "parcel:build": "parcel build src/index.js && parcel build src/index.css"
+  },
+  "author": "BarneyLoosemore",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@parcel/compressor-brotli": "^2.6.2",
+    "@parcel/compressor-gzip": "^2.6.2",
+    "parcel": "^2.6.2"
+  }
+}
