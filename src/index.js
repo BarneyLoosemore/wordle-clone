@@ -1,5 +1,5 @@
 /* Constants */
-const WORDS_TO_GUESS = ["pizza", "react", "radio", "eager", "lucky", "prone"];
+const WORDS_TO_GUESS = ["zesty", "yield", "forge", "greed", "liver", "sushi"];
 const DICTIONARY_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
 const LETTERS = Object.fromEntries(
@@ -7,6 +7,9 @@ const LETTERS = Object.fromEntries(
 );
 const ENTER_KEY = "ENTER";
 const DELETE_KEY = "DELETE";
+const GREEN = "#006f45";
+const YELLOW = "#da8821";
+const RED = "#8b1e1e";
 
 const WORD_TO_GUESS =
   WORDS_TO_GUESS[
@@ -77,13 +80,14 @@ const handleGuess = async () => {
 
   // If word does not exist in dictionary, do nothing
   if (!wordExists) {
+    alert("Word does not exist!");
     return;
   }
 
   // If the guess is correct, player wins!
   if (guessWord === WORD_TO_GUESS) {
     await letterElements.forEach((child) => {
-      child.style.backgroundColor = "green";
+      child.style.backgroundColor = GREEN;
       const letter = child.textContent;
       LETTERS[letter] = {
         used: true,
@@ -95,6 +99,7 @@ const handleGuess = async () => {
     setTimeout(() => alert("You win!"), 0);
   }
   // Else, asses what letters the player got right/wrong
+  // ⚠️ TODO: fix instance where guess has letter more than once, but answer only has it once ⚠️
   else {
     letterElements.forEach((child, index) => {
       const letter = child.textContent;
@@ -105,21 +110,21 @@ const handleGuess = async () => {
           correct: true,
           correctPos: true,
         };
-        child.style.backgroundColor = "green";
+        child.style.backgroundColor = GREEN;
       } else if (WORD_TO_GUESS.includes(letter)) {
         LETTERS[letter] = {
           used: true,
           correct: true,
           correctPos: false,
         };
-        child.style.backgroundColor = "yellow";
+        child.style.backgroundColor = YELLOW;
       } else {
         LETTERS[letter] = {
           used: true,
           correct: false,
           correctPos: false,
         };
-        child.style.backgroundColor = "red";
+        child.style.backgroundColor = RED;
       }
     });
 
@@ -132,8 +137,12 @@ const handleGuess = async () => {
 };
 
 const doesWordExist = async (word) => {
-  const res = await fetch(`${DICTIONARY_API_URL}${word}`);
-  return !(res.status === 404);
+  try {
+    const res = await fetch(`${DICTIONARY_API_URL}${word}`);
+    return !(res.status === 404);
+  } catch (_e) {
+    return true;
+  }
 };
 
 const updateKeyboard = () => {
@@ -142,9 +151,9 @@ const updateKeyboard = () => {
       const letterElement = document.getElementById(letter);
       letterElement.style.backgroundColor = letterData.correct
         ? letterData.correctPos
-          ? "green"
-          : "yellow"
-        : "red";
+          ? GREEN
+          : YELLOW
+        : RED;
     }
   });
 };
