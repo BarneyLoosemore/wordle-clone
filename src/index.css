@@ -41,6 +41,7 @@ button {
 .header {
   display: flex;
   justify-content: center;
+  align-items: center;
   border-bottom: 1px solid #3a3a3c;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
