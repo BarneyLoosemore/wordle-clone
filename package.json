@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "parcel:build": "parcel build src/index.html"
+    "build": "parcel build --public-url '.' src/index.html",
+    "deploy": "git add ./dist/ && git commit --amend --no-edit && git push origin (git subtree split --prefix dist main):gh-pages --force",
+    "build:deploy": "build && deploy"
   },
   "author": "BarneyLoosemore",
   "license": "ISC",
