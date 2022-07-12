@@ -44,6 +44,7 @@ button {
   border-bottom: 1px solid #3a3a3c;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+  gap: 3rem;
 }
 
 .header > h1 {
@@ -53,6 +54,23 @@ button {
   font-weight: 800;
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
+}
+
+.header > * {
+  color: white;
+  fill: white;
+}
+
+.header > a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header > a:hover,
+a:focus {
+  opacity: 0.8;
+  transition: 0.2s ease-in-out;
 }
 
 .tile-grid {
@@ -98,6 +116,18 @@ button {
   background-color: #818384;
   flex: 1;
   height: 58px;
+}
+
+.keyboard-row > button:hover {
+  opacity: 0.85;
+  transition: 0.1s ease-in-out;
+  cursor: pointer;
+}
+
+.keyboard-row > button:active {
+  opacity: 0.85;
+  transition: 0.1s ease-in-out;
+  cursor: pointer;
 }
 
 .keyboard-row #ENTER,

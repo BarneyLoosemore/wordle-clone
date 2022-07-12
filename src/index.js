@@ -55,7 +55,11 @@ document.addEventListener("keydown", (event) => {
 
 /* Handler functions */
 const handleLetterSelect = (letter) => {
-  if (guessLetterNumber > 5 && letter === "enter") {
+  if (
+    guessLetterNumber > 5 &&
+    letter === "enter" &&
+    !(document.activeElement === document.getElementById("source-code"))
+  ) {
     handleGuess();
   }
   // Allow player to add letters if they are A-Z
