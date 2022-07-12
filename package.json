@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "build": "parcel build --public-url '.' src/index.html",
-    "deploy": "git add ./dist/ && git commit --amend --no-edit && git push origin (git subtree split --prefix dist main):gh-pages --force",
-    "build:deploy": "build && deploy"
+    "deploy": "git add ./dist/ && git commit --amend --no-edit && git push origin `git subtree split --prefix dist main`:gh-pages --force",
+    "build:deploy": "npm run build && npm run deploy"
   },
   "author": "BarneyLoosemore",
   "license": "ISC",
