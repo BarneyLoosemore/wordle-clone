@@ -1,6 +1,6 @@
 # A simple Wordle clone
 ### <li>Built with vanilla JS/HTML/CSS, and bundled/built with <a href="https://parceljs.org/">Parcel</a></li>
-### - Served <a href="https://barneyloosemore.github.io/wordle-clone">here</a> using Github Pages.
+### <li> Served <a href="https://barneyloosemore.github.io/wordle-clone">here</a> with Github Pages</li>
 ---
 I'm using a git subtree consisting of just the `/dist` directory as the source for Github pages. I have a deployment script for force pushing a `/dist` build to the subtree, thus triggering a build. Any changes to `main` can be made independent of a build and/or deployment.
 
