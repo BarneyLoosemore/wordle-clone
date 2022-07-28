@@ -1,4 +1,4 @@
-[
+export default [
   "AAHED",
   "AALII",
   "AARGH",
@@ -12476,5 +12476,5 @@
   "ZURFS",
   "ZYGAL",
   "ZYGON",
-  "ZYMIC"
-]
+  "ZYMIC",
+];

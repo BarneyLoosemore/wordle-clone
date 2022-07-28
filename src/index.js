@@ -1,4 +1,4 @@
-import permittedWords from "../permittedWords.json" assert { type: "json" };
+import permittedWords from "./permittedWords.js";
 
 /* Constants */
 const WORDS_TO_GUESS = [
