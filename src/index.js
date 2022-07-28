@@ -1,15 +1,23 @@
+import permittedWords from "../permittedWords.json" assert { type: "json" };
+
 /* Constants */
-const WORDS_TO_GUESS = ["zesty", "yield", "forge", "greed", "liver", "sushi"];
-const DICTIONARY_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+const WORDS_TO_GUESS = [
+  "zesty",
+  "yield",
+  "forge",
+  "greed",
+  "liver",
+  "sushi",
+  "farty",
+  "preen",
+  "exile",
+];
 const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-const LETTERS = Object.fromEntries(
-  ALPHABET.split("").map((letter) => [letter.toUpperCase(), {}])
-);
 const ENTER_KEY = "ENTER";
 const DELETE_KEY = "DELETE";
 const GREEN = "#006f45";
 const YELLOW = "#da8821";
-const RED = "#8b1e1e";
+const GREY = "#3a3a3c";
 
 const WORD_TO_GUESS =
   WORDS_TO_GUESS[
@@ -42,9 +50,11 @@ document.getElementById(DELETE_KEY).addEventListener("click", () => {
 });
 
 const deleteLatestLetter = () => {
-  currentGuessRowElement.querySelector(
+  const tile = currentGuessRowElement.querySelector(
     `div:nth-child(${guessLetterNumber - 1})`
-  ).innerHTML = "";
+  );
+  tile.innerHTML = "";
+  tile.classList.remove("letter-added");
   guessLetterNumber--;
 };
 
@@ -64,9 +74,11 @@ const handleLetterSelect = (letter) => {
   }
   // Allow player to add letters if they are A-Z
   if (guessLetterNumber <= 5 && letter.match(/^[a-zA-Z]$/)) {
-    currentGuessRowElement.querySelector(
+    const tile = currentGuessRowElement.querySelector(
       `div:nth-child(${guessLetterNumber})`
-    ).textContent = letter.toUpperCase();
+    );
+    tile.textContent = letter.toUpperCase();
+    tile.classList.add("letter-added");
     guessLetterNumber++;
   }
   if (letter === "backspace" && guessLetterNumber > 1) {
@@ -74,90 +86,116 @@ const handleLetterSelect = (letter) => {
   }
 };
 
-const handleGuess = async () => {
+const handleGuess = () => {
   const letterElements = Array.from(currentGuessRowElement.children);
-  const guessWord = letterElements
+  const playerGuessWord = letterElements
     .map((letterElement) => letterElement.textContent)
     .join("");
 
-  const wordExists = await doesWordExist(guessWord);
+  const wordExists = doesWordExist(playerGuessWord);
 
   // If word does not exist in dictionary, do nothing
   if (!wordExists) {
-    alert("Word does not exist!");
+    displayUnpermittedWordToast();
     return;
   }
 
   // If the guess is correct, player wins!
-  if (guessWord === WORD_TO_GUESS) {
-    await letterElements.forEach((child) => {
+  if (playerGuessWord === WORD_TO_GUESS) {
+    letterElements.forEach((child) => {
+      child.classList.remove("letter-added");
+      child.style.border = "none";
       child.style.backgroundColor = GREEN;
-      const letter = child.textContent;
-      LETTERS[letter] = {
-        used: true,
-        correct: true,
-        correctPos: true,
-      };
     });
-    await updateKeyboard();
+    WORD_TO_GUESS.split("").forEach((letter) => {
+      document.getElementById(letter).style.backgroundColor = GREEN;
+    });
     setTimeout(() => alert("You win!"), 0);
-  }
-  // Else, asses what letters the player got right/wrong
-  // ⚠️ TODO: fix instance where guess has letter more than once, but answer only has it once ⚠️
-  else {
-    letterElements.forEach((child, index) => {
-      const letter = child.textContent;
+  } else {
+    // Else, assess what letters of the guess the player got right/wrong
+    const guessStatus = checkGuess(playerGuessWord);
 
-      if (letter === WORD_TO_GUESS[index]) {
-        LETTERS[letter] = {
-          used: true,
-          correct: true,
-          correctPos: true,
-        };
-        child.style.backgroundColor = GREEN;
-      } else if (WORD_TO_GUESS.includes(letter)) {
-        LETTERS[letter] = {
-          used: true,
-          correct: true,
-          correctPos: false,
-        };
-        child.style.backgroundColor = YELLOW;
-      } else {
-        LETTERS[letter] = {
-          used: true,
-          correct: false,
-          correctPos: false,
-        };
-        child.style.backgroundColor = RED;
-      }
+    letterElements.forEach((child, index) => {
+      const { correct, correctPos } = guessStatus[index];
+
+      child.classList.remove("letter-added");
+      child.style.border = "none";
+      child.style.backgroundColor = correctPos
+        ? GREEN
+        : correct
+        ? YELLOW
+        : GREY;
     });
 
     // If user guesses wrong, go to next guess row and update the keyboard
-    updateKeyboard();
+    updateKeyboard(guessStatus);
     guessLetterNumber = 1;
     guessNumber++;
     currentGuessRowElement = document.getElementById(`tile-row-${guessNumber}`);
   }
 };
 
-const doesWordExist = async (word) => {
-  try {
-    const res = await fetch(`${DICTIONARY_API_URL}${word}`);
-    return !(res.status === 404);
-  } catch (_e) {
-    return true;
-  }
+const updateKeyboard = (guessStatus) => {
+  guessStatus.forEach(({ letter, correct, correctPos }) => {
+    const letterElement = document.getElementById(letter);
+    letterElement.classList.remove("letter-added");
+    letterElement.style.border = "none";
+    letterElement.style.backgroundColor = correctPos
+      ? GREEN
+      : correct
+      ? YELLOW
+      : GREY;
+  });
 };
 
-const updateKeyboard = () => {
-  Object.entries(LETTERS).forEach(([letter, letterData]) => {
-    if (letterData.used) {
-      const letterElement = document.getElementById(letter);
-      letterElement.style.backgroundColor = letterData.correct
-        ? letterData.correctPos
-          ? GREEN
-          : YELLOW
-        : RED;
+const doesWordExist = (word) => {
+  return permittedWords.indexOf(word) !== -1;
+};
+
+// Bit of a hacky solution, but it works
+const checkGuess = (guess) => {
+  const guessLetters = guess.split("");
+  const wordToGuessLetters = WORD_TO_GUESS.split("");
+
+  // This stores the status of each letter in the guess
+  const playerGuessStatus = guessLetters.map((letter) => ({
+    letter,
+    correct: false,
+    correctPos: false,
+  }));
+
+  // Check all the letters in the guess that are correct AND in the right position
+  // For any matches, the letter is removed from the word to guess letter list, so as to not trigger an accidental 'partial match' in the next check
+  const wordToGuessLettersLeftToCheck = guessLetters.map((letter, index) => {
+    if (letter === wordToGuessLetters[index]) {
+      playerGuessStatus[index].correctPos = true;
+      return null;
+    }
+    return wordToGuessLetters[index];
+  });
+
+  // Now, check all the letters in the guess that are correct but in the wrong position
+  guessLetters.forEach((letter, index) => {
+    if (playerGuessStatus[index].correctPos) {
+      return;
+    }
+    if (wordToGuessLettersLeftToCheck.includes(letter)) {
+      playerGuessStatus[index].correct = true;
     }
   });
+
+  return playerGuessStatus;
+};
+
+const displayUnpermittedWordToast = () => {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerHTML = `<p>Not a permitted word</p>`;
+  document.body.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = "0%";
+    setTimeout(() => {
+      toast.remove();
+    }, 1000);
+  }, 3000);
 };

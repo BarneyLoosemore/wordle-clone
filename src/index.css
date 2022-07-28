@@ -34,8 +34,11 @@ button {
 }
 
 .main {
-  max-width: 32rem;
-  margin: 0 auto;
+  height: calc(100vh - 82px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .header {
@@ -75,12 +78,12 @@ a:focus {
 }
 
 .tile-grid {
+  margin: auto;
   display: grid;
   width: 350px;
   height: 420px;
   grid-template-rows: repeat(6, minmax(0, 1fr));
   gap: 0.25rem;
-  margin: 5rem auto;
 }
 
 .tile-row {
@@ -100,8 +103,26 @@ a:focus {
   font-weight: 600;
 }
 
+@keyframes pop-tile {
+  0% {
+    transform: scale(1);
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    ransform: scale(1);
+  }
+}
+
+.tile-row > div.letter-added {
+  border-color: #767676;
+  animation: pop-tile 0.075s ease-in-out;
+}
+
 .keyboard {
-  margin: auto;
+  max-width: 32rem;
+  width: calc(100% - 16px);
 }
 
 .keyboard-row {
@@ -117,6 +138,8 @@ a:focus {
   background-color: #818384;
   flex: 1;
   height: 58px;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .keyboard-row > button:hover {
@@ -134,4 +157,37 @@ a:focus {
 .keyboard-row #ENTER,
 #DELETE {
   flex: 1.5;
+}
+
+.keyboard-row #DELETE {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.keyboard-row #DELETE > svg {
+  fill: white;
+  height: 24px;
+}
+
+.keyboard-row #ENTER {
+  font-size: 12px;
+}
+
+.toast {
+  position: absolute;
+  right: 0;
+  left: 0;
+  margin: auto;
+  width: max-content;
+  top: 100px;
+  background-color: #e2e2e2;
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: opacity 1s ease-out;
+}
+
+.toast > p {
+  margin: 0;
+  font-weight: bold;
 }
