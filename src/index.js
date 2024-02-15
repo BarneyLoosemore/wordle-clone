@@ -1,6 +1,5 @@
-import permittedWords from "./permittedWords.js";
+import permittedWords from "./permitted-words.js";
 
-/* Constants */
 const WORDS_TO_GUESS = [
   "zesty",
   "yield",
@@ -8,7 +7,6 @@ const WORDS_TO_GUESS = [
   "greed",
   "liver",
   "sushi",
-  "farty",
   "preen",
   "exile",
 ];
@@ -24,12 +22,10 @@ const WORD_TO_GUESS =
     Math.floor(Math.random() * WORDS_TO_GUESS.length)
   ].toUpperCase();
 
-/* Variables / game state */
 let guessNumber = 1;
 let guessLetterNumber = 1;
 let currentGuessRowElement = document.getElementById(`tile-row-${guessNumber}`);
 
-/* Bind event listeners */
 ALPHABET.split("").forEach((letter) => {
   const keyboardLetterElement = document.getElementById(letter.toUpperCase());
   keyboardLetterElement.addEventListener("click", () => {
@@ -49,6 +45,11 @@ document.getElementById(DELETE_KEY).addEventListener("click", () => {
   }
 });
 
+document.addEventListener("keydown", (event) => {
+  const letter = event.key.toLowerCase();
+  handleLetterSelect(letter);
+});
+
 const deleteLatestLetter = () => {
   const tile = currentGuessRowElement.querySelector(
     `div:nth-child(${guessLetterNumber - 1})`
@@ -58,31 +59,49 @@ const deleteLatestLetter = () => {
   guessLetterNumber--;
 };
 
-document.addEventListener("keydown", (event) => {
-  const letter = event.key.toLowerCase();
-  handleLetterSelect(letter);
-});
+const addLetterToGuess = (letter) => {
+  const tile = currentGuessRowElement.querySelector(
+    `div:nth-child(${guessLetterNumber})`
+  );
+  tile.textContent = letter.toUpperCase();
+  tile.classList.add("letter-added");
+  guessLetterNumber++;
+};
 
-/* Handler functions */
 const handleLetterSelect = (letter) => {
-  if (
-    guessLetterNumber > 5 &&
-    letter === "enter" &&
-    !(document.activeElement === document.getElementById("source-code"))
-  ) {
+  const isEnterGuess = guessLetterNumber > 5 && letter === "enter";
+  const isLetterDeletion = guessLetterNumber > 1 && letter === "backspace";
+  const isLetterEntry = guessLetterNumber <= 5 && letter.match(/^[a-zA-Z]$/);
+
+  console.log(
+    `isEnterGuess: ${isEnterGuess}, isLetterDeletion: ${isLetterDeletion}, isLetterEntry: ${isLetterEntry}`
+  );
+
+  if (isEnterGuess) {
     handleGuess();
+    return;
   }
-  // Allow player to add letters if they are A-Z
-  if (guessLetterNumber <= 5 && letter.match(/^[a-zA-Z]$/)) {
-    const tile = currentGuessRowElement.querySelector(
-      `div:nth-child(${guessLetterNumber})`
-    );
-    tile.textContent = letter.toUpperCase();
-    tile.classList.add("letter-added");
-    guessLetterNumber++;
-  }
-  if (letter === "backspace" && guessLetterNumber > 1) {
+
+  if (isLetterDeletion) {
     deleteLatestLetter();
+    return;
+  }
+
+  if (isLetterEntry) {
+    addLetterToGuess(letter);
+    return;
+  }
+};
+
+const updateKeyElement = (element, correct, correctPos) => {
+  element.classList.remove("letter-added");
+  element.style.border = "none";
+  if (correctPos) {
+    element.style.backgroundColor = GREEN;
+  } else if (correct) {
+    element.style.backgroundColor = YELLOW;
+  } else {
+    element.style.backgroundColor = GREY;
   }
 };
 
@@ -94,65 +113,50 @@ const handleGuess = () => {
 
   const wordExists = doesWordExist(playerGuessWord);
 
-  // If word does not exist in dictionary, do nothing
   if (!wordExists) {
     displayUnpermittedWordToast();
     return;
   }
 
-  // If the guess is correct, player wins!
-  if (playerGuessWord === WORD_TO_GUESS) {
-    letterElements.forEach((child) => {
-      child.classList.remove("letter-added");
-      child.style.border = "none";
-      child.style.backgroundColor = GREEN;
-    });
-    WORD_TO_GUESS.split("").forEach((letter) => {
-      document.getElementById(letter).style.backgroundColor = GREEN;
-    });
-    setTimeout(() => alert("You win!"), 0);
-  } else {
-    // Else, assess what letters of the guess the player got right/wrong
-    const guessStatus = checkGuess(playerGuessWord);
+  const isCorrectGuess = playerGuessWord === WORD_TO_GUESS;
 
-    letterElements.forEach((child, index) => {
-      const { correct, correctPos } = guessStatus[index];
+  if (isCorrectGuess) {
+    for (const el of letterElements) {
+      el.classList.remove("letter-added");
+      el.style.border = "none";
+      el.style.backgroundColor = GREEN;
+    }
 
-      child.classList.remove("letter-added");
-      child.style.border = "none";
-      child.style.backgroundColor = correctPos
-        ? GREEN
-        : correct
-        ? YELLOW
-        : GREY;
-    });
+    for (const letter of WORD_TO_GUESS.split("")) {
+      const el = document.getElementById(letter);
+      el.style.backgroundColor = GREEN;
+    }
 
-    // If user guesses wrong, go to next guess row and update the keyboard
-    updateKeyboard(guessStatus);
-    guessLetterNumber = 1;
-    guessNumber++;
-    currentGuessRowElement = document.getElementById(`tile-row-${guessNumber}`);
+    setTimeout(() => alert("You win!"), 10);
+    return;
   }
-};
+  const guessStatus = checkGuess(playerGuessWord);
 
-const updateKeyboard = (guessStatus) => {
-  guessStatus.forEach(({ letter, correct, correctPos }) => {
-    const letterElement = document.getElementById(letter);
-    letterElement.classList.remove("letter-added");
-    letterElement.style.border = "none";
-    letterElement.style.backgroundColor = correctPos
-      ? GREEN
-      : correct
-      ? YELLOW
-      : GREY;
-  });
+  for (const [index, el] of letterElements.entries()) {
+    const { correct, correctPos } = guessStatus[index];
+    updateKeyElement(el, correct, correctPos);
+  }
+
+  for (const { letter, correct, correctPos } of guessStatus) {
+    const el = document.getElementById(letter);
+    updateKeyElement(el, correct, correctPos);
+  }
+
+  guessLetterNumber = 1;
+  guessNumber++;
+  currentGuessRowElement = document.getElementById(`tile-row-${guessNumber}`);
+  console.log({ guessNumber });
 };
 
 const doesWordExist = (word) => {
   return permittedWords.indexOf(word) !== -1;
 };
 
-// Bit of a hacky solution, but it works
 const checkGuess = (guess) => {
   const guessLetters = guess.split("");
   const wordToGuessLetters = WORD_TO_GUESS.split("");
