@@ -1,0 +1,10 @@
+export const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+export const ENTER_KEY = "ENTER";
+export const DELETE_KEY = "DELETE";
+export const ENTER = "Enter";
+export const BACKSPACE = "Backspace";
+export const GREEN = "#006f45";
+export const YELLOW = "#da8821";
+export const GREY = "#3a3a3c";
+export const ONE_DAY_IN_MS = 1000 * 60 * 60 * 24;
+export const LOCAL_STORAGE_KEY = "last-new-word";

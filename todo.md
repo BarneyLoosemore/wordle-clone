@@ -1,0 +1,21 @@
+# TODO
+
+- [ ] PWA!
+  - [x] Add service worker
+  - [ ] Add manifest
+  - [ ] Add offline page to SW?
+  - [ ] Add push notifications -> new word ready?
+  - [ ] Add install prompt
+  - [ ] Add splash screen? Could gate the JS load behind this?
+- [ ] Optimise perf
+  - [ ] Better code-splitting
+  - [ ] Use web workers?
+  - [ ] Use service workers for permitted words so we don't have to load full file?
+  - [ ] Minify/compress stuff
+  - [ ] Preloads?
+  - [ ] CSS for certain stuff?
+- [ ] Better HTML structure
+- [ ] Better CSS
+- [ ] Audit A11y
+- [ ] Add browser tests - mocha/chai?
+- [ ] Add CI/CD

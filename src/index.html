@@ -28,7 +28,6 @@
         </svg>
       </a>
     </header>
-    /** TODO refactor to table */
     <main>
       <div class="tile-grid">
         <div class="tile-row" id="tile-row-1">
@@ -119,4 +118,11 @@
       </div>
     </main>
   </body>
+  <script>
+    window.addEventListener("load", () => {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js");
+      }
+    });
+  </script>
 </html>

@@ -1,30 +1,26 @@
 import permittedWords from "./permitted-words.js";
-
-const WORDS_TO_GUESS = [
-  "zesty",
-  "yield",
-  "forge",
-  "greed",
-  "liver",
-  "sushi",
-  "preen",
-  "exile",
-];
-const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
-const ENTER_KEY = "ENTER";
-const DELETE_KEY = "DELETE";
-const GREEN = "#006f45";
-const YELLOW = "#da8821";
-const GREY = "#3a3a3c";
-
-const WORD_TO_GUESS =
-  WORDS_TO_GUESS[
-    Math.floor(Math.random() * WORDS_TO_GUESS.length)
-  ].toUpperCase();
+import {
+  ALPHABET,
+  DELETE_KEY,
+  ENTER_KEY,
+  ENTER,
+  BACKSPACE,
+  GREEN,
+} from "./constants.js";
+import {
+  updateKeyElement,
+  displayUnpermittedWordToast,
+  getWord,
+} from "./utils.js";
 
 let guessNumber = 1;
 let guessLetterNumber = 1;
 let currentGuessRowElement = document.getElementById(`tile-row-${guessNumber}`);
+const WORD_TO_GUESS = getWord();
+
+const canDeleteLetter = () => guessLetterNumber > 1;
+const canEnterGuess = () => guessLetterNumber > 5;
+const canAddLetter = () => guessLetterNumber <= 5;
 
 ALPHABET.split("").forEach((letter) => {
   const keyboardLetterElement = document.getElementById(letter.toUpperCase());
@@ -32,22 +28,16 @@ ALPHABET.split("").forEach((letter) => {
     handleLetterSelect(letter);
   });
 });
-
+document.addEventListener("keydown", (event) => handleLetterSelect(event.key));
 document.getElementById(ENTER_KEY).addEventListener("click", () => {
-  if (guessLetterNumber > 5) {
+  if (canEnterGuess()) {
     handleGuess();
   }
 });
-
 document.getElementById(DELETE_KEY).addEventListener("click", () => {
   if (guessLetterNumber > 1) {
     deleteLatestLetter();
   }
-});
-
-document.addEventListener("keydown", (event) => {
-  const letter = event.key.toLowerCase();
-  handleLetterSelect(letter);
 });
 
 const deleteLatestLetter = () => {
@@ -69,39 +59,19 @@ const addLetterToGuess = (letter) => {
 };
 
 const handleLetterSelect = (letter) => {
-  const isEnterGuess = guessLetterNumber > 5 && letter === "enter";
-  const isLetterDeletion = guessLetterNumber > 1 && letter === "backspace";
-  const isLetterEntry = guessLetterNumber <= 5 && letter.match(/^[a-zA-Z]$/);
-
-  console.log(
-    `isEnterGuess: ${isEnterGuess}, isLetterDeletion: ${isLetterDeletion}, isLetterEntry: ${isLetterEntry}`
-  );
-
-  if (isEnterGuess) {
+  if (canEnterGuess() && letter === ENTER) {
     handleGuess();
     return;
   }
 
-  if (isLetterDeletion) {
+  if (canDeleteLetter() && letter === BACKSPACE) {
     deleteLatestLetter();
     return;
   }
 
-  if (isLetterEntry) {
-    addLetterToGuess(letter);
+  if (canAddLetter() && letter.match(/^[a-zA-Z]$/)) {
+    addLetterToGuess(letter.toLowerCase());
     return;
-  }
-};
-
-const updateKeyElement = (element, correct, correctPos) => {
-  element.classList.remove("letter-added");
-  element.style.border = "none";
-  if (correctPos) {
-    element.style.backgroundColor = GREEN;
-  } else if (correct) {
-    element.style.backgroundColor = YELLOW;
-  } else {
-    element.style.backgroundColor = GREY;
   }
 };
 
@@ -150,7 +120,6 @@ const handleGuess = () => {
   guessLetterNumber = 1;
   guessNumber++;
   currentGuessRowElement = document.getElementById(`tile-row-${guessNumber}`);
-  console.log({ guessNumber });
 };
 
 const doesWordExist = (word) => {
@@ -161,15 +130,12 @@ const checkGuess = (guess) => {
   const guessLetters = guess.split("");
   const wordToGuessLetters = WORD_TO_GUESS.split("");
 
-  // This stores the status of each letter in the guess
   const playerGuessStatus = guessLetters.map((letter) => ({
     letter,
     correct: false,
     correctPos: false,
   }));
 
-  // Check all the letters in the guess that are correct AND in the right position
-  // For any matches, the letter is removed from the word to guess letter list, so as to not trigger an accidental 'partial match' in the next check
   const wordToGuessLettersLeftToCheck = guessLetters.map((letter, index) => {
     if (letter === wordToGuessLetters[index]) {
       playerGuessStatus[index].correctPos = true;
@@ -178,28 +144,13 @@ const checkGuess = (guess) => {
     return wordToGuessLetters[index];
   });
 
-  // Now, check all the letters in the guess that are correct but in the wrong position
-  guessLetters.forEach((letter, index) => {
+  for (const [index, letter] of guessLetters.entries()) {
     if (playerGuessStatus[index].correctPos) {
-      return;
+      continue;
     }
     if (wordToGuessLettersLeftToCheck.includes(letter)) {
       playerGuessStatus[index].correct = true;
     }
-  });
-
+  }
   return playerGuessStatus;
-};
-
-const displayUnpermittedWordToast = () => {
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.innerHTML = `<p>Not a permitted word</p>`;
-  document.body.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = "0%";
-    setTimeout(() => {
-      toast.remove();
-    }, 1000);
-  }, 3000);
 };
