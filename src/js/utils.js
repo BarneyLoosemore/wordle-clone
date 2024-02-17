@@ -1,17 +1,14 @@
 import words from "./permitted-words.js";
-import { GREY, YELLOW, ONE_DAY_IN_MS, LOCAL_STORAGE_KEY } from "./constants.js";
+import {
+  GREY,
+  GREEN,
+  YELLOW,
+  ONE_DAY_IN_MS,
+  LOCAL_STORAGE_KEY,
+} from "./constants.js";
 
-export const updateKeyElement = (element, correct, correctPos) => {
-  element.classList.remove("letter-added");
-  element.style.border = "none";
-  if (correctPos) {
-    element.style.backgroundColor = GREEN;
-  } else if (correct) {
-    element.style.backgroundColor = YELLOW;
-  } else {
-    element.style.backgroundColor = GREY;
-  }
-};
+export const getCurrentGuessRowElement = (guessNumber) =>
+  document.getElementById(`tile-row-${guessNumber}`);
 
 export const displayUnpermittedWordToast = () => {
   // TODO: make this of appropriate html
@@ -36,7 +33,7 @@ export const readyForNewWord = (timeWhenLastWordGenerated) => {
 
 export const getWord = () => {
   const { timeWhenLastWordGenerated, word } =
-    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) || {};
+    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) ?? {};
 
   if (!word || readyForNewWord(timeWhenLastWordGenerated)) {
     const newWord = words[Math.floor(Math.random() * words.length)];

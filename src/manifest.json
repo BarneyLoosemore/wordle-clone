@@ -1,0 +1,14 @@
+{
+  "name": "Wordle",
+  "description": "A simple word game",
+  "background_color": "white",
+  "display": "standalone",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "images/dog.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}

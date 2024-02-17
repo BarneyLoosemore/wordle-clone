@@ -16,66 +16,67 @@ import {
 let guessNumber = 1;
 let guessLetterNumber = 1;
 let currentGuessRowElement = document.getElementById(`tile-row-${guessNumber}`);
+const gameState = {
+  GUESS_NUMBER: 1,
+  GUESS_LETTER_NUMBER: 1,
+  CURRENT_GUESS_ROW_ELEMENT: document.getElementById(`tile-row-1`),
+};
+
 const WORD_TO_GUESS = getWord();
 
-const canDeleteLetter = () => guessLetterNumber > 1;
-const canEnterGuess = () => guessLetterNumber > 5;
-const canAddLetter = () => guessLetterNumber <= 5;
+const canDeleteLetter = () => gameState.GUESS_LETTER_NUMBER > 1;
+const canEnterGuess = () => gameState.GUESS_LETTER_NUMBER > 5;
+const canAddLetter = () => gameState.GUESS_LETTER_NUMBER <= 5;
 
-ALPHABET.split("").forEach((letter) => {
-  const keyboardLetterElement = document.getElementById(letter.toUpperCase());
-  keyboardLetterElement.addEventListener("click", () => {
-    handleLetterSelect(letter);
-  });
+[...ALPHABET, ENTER, BACKSPACE].split("").forEach((key) => {
+  const keyboardElement = document.getElementById(key);
+  keyboardElement.addEventListener("click", () => handleLetterSelect(key));
 });
-document.addEventListener("keydown", (event) => handleLetterSelect(event.key));
-document.getElementById(ENTER_KEY).addEventListener("click", () => {
-  if (canEnterGuess()) {
-    handleGuess();
-  }
-});
-document.getElementById(DELETE_KEY).addEventListener("click", () => {
-  if (guessLetterNumber > 1) {
-    deleteLatestLetter();
-  }
-});
+document.addEventListener("keydown", ({ key }) => handleLetterSelect(key));
+
+const getCurrentTile = () => {
+  const row = document.getElementById(`tile-row-${gameState.GUESS_NUMBER}`);
+  const tile = row.querySelector(
+    `div:nth-child(${gameState.GUESS_LETTER_NUMBER})`
+  );
+  return tile;
+};
 
 const deleteLatestLetter = () => {
-  const tile = currentGuessRowElement.querySelector(
-    `div:nth-child(${guessLetterNumber - 1})`
-  );
+  gameState.GUESS_LETTER_NUMBER - 1;
+  const tile = getCurrentTile();
   tile.innerHTML = "";
   tile.classList.remove("letter-added");
-  guessLetterNumber--;
 };
 
 const addLetterToGuess = (letter) => {
-  const tile = currentGuessRowElement.querySelector(
-    `div:nth-child(${guessLetterNumber})`
-  );
+  if (!canAddLetter()) return;
+  const tile = getCurrentTile();
   tile.textContent = letter.toUpperCase();
   tile.classList.add("letter-added");
-  guessLetterNumber++;
+  gameState.GUESS_LETTER_NUMBER++;
 };
 
 const handleLetterSelect = (letter) => {
-  if (canEnterGuess() && letter === ENTER) {
+  if (letter === ENTER) {
     handleGuess();
     return;
   }
 
-  if (canDeleteLetter() && letter === BACKSPACE) {
+  if (letter === BACKSPACE && canDeleteLetter()) {
     deleteLatestLetter();
     return;
   }
 
-  if (canAddLetter() && letter.match(/^[a-zA-Z]$/)) {
+  if (letter.match(/^[a-zA-Z]$/)) {
     addLetterToGuess(letter.toLowerCase());
     return;
   }
 };
 
 const handleGuess = () => {
+  if (!canEnterGuess()) return;
+
   const letterElements = Array.from(currentGuessRowElement.children);
   const playerGuessWord = letterElements
     .map((letterElement) => letterElement.textContent)
@@ -154,3 +155,33 @@ const checkGuess = (guess) => {
   }
   return playerGuessStatus;
 };
+
+const proxyFor = (obj, handler) => new Proxy(obj, handler);
+
+const gameStateProxy = proxyFor(gameState, {
+  set: (obj, prop, value) => {
+    if (prop === "GUESS_LETTER_NUMBER") {
+      const tile = obj.CURRENT_GUESS_ROW_ELEMENT.querySelector(
+        `div:nth-child(${value})`
+      );
+      tile.innerHTML = letter;
+      tile.classList.add(type);
+    }
+    return true;
+  },
+});
+
+class GameObject extends EventTarget {
+  constructor() {
+    super();
+  }
+
+  get score() {
+    return this._score;
+  }
+
+  set score(value) {
+    this._score = value;
+    this.dispatchEvent(new CustomEvent("scoreChange", { detail: value }));
+  }
+}

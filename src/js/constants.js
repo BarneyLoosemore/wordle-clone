@@ -1,4 +1,4 @@
-export const ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+export const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export const ENTER_KEY = "ENTER";
 export const DELETE_KEY = "DELETE";
 export const ENTER = "Enter";
