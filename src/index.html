@@ -10,7 +10,6 @@
     <title>Wordle Clone | Poodle 🐕</title>
     <link rel="stylesheet" href="./css/index.css" />
     <link rel="manifest" href="manifest.json" />
-    <script type="module" src="./js/index.js"></script>
   </head>
   <body>
     <header class="header">
@@ -30,95 +29,223 @@
       </a>
     </header>
     <main>
-      <div class="tile-grid">
-        <div class="tile-row" id="tile-row-1">
+      <style>
+        tile-row {
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          grid-gap: 0.5rem;
+          margin-top: 2rem;
+        }
+      </style>
+      <tile-row>
+        <template shadowrootmode="open"
+          ><style>
+            div {
+              background-color: #f0f0f0;
+              border-radius: 0.25rem;
+              width: 4rem;
+              height: 4rem;
+              text-align: center;
+              font-size: 2rem;
+              font-weight: bold;
+              color: #333;
+            }
+          </style>
           <div></div>
           <div></div>
           <div></div>
           <div></div>
-          <div></div>
-        </div>
-        <div class="tile-row" id="tile-row-2">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div class="tile-row" id="tile-row-3">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div class="tile-row" id="tile-row-4">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div class="tile-row" id="tile-row-5">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-        <div class="tile-row" id="tile-row-6">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-      <div class="keyboard">
-        <div class="keyboard-row">
-          <button id="Q">Q</button>
-          <button id="W">W</button>
-          <button id="E">E</button>
-          <button id="R">R</button>
-          <button id="T">T</button>
-          <button id="Y">Y</button>
-          <button id="U">U</button>
-          <button id="I">I</button>
-          <button id="O">O</button>
-          <button id="P">P</button>
-        </div>
-        <div class="keyboard-row" style="padding: 0 1.25rem">
-          <button id="A">A</button>
-          <button id="S">S</button>
-          <button id="D">D</button>
-          <button id="F">F</button>
-          <button id="G">G</button>
-          <button id="H">H</button>
-          <button id="J">J</button>
-          <button id="K">K</button>
-          <button id="L">L</button>
-        </div>
-        <div class="keyboard-row">
-          <button id="Enter">ENTER</button>
-          <button id="Z">Z</button>
-          <button id="X">X</button>
-          <button id="C">C</button>
-          <button id="V">V</button>
-          <button id="B">B</button>
-          <button id="N">N</button>
-          <button id="M">M</button>
-          <button id="Backspace">
+          <div></div
+        ></template>
+      </tile-row>
+
+      <key-board>
+        <template shadowrootmode="open"
+          ><button>A</button>
+          <button>B</button>
+          <button>C</button>
+          <button>D</button>
+          <button>E</button>
+          <button>F</button>
+          <button>G</button>
+          <button>H</button>
+          <button>I</button>
+          <button>J</button>
+          <button>K</button>
+          <button>L</button>
+          <button>M</button>
+          <button>N</button>
+          <button>O</button>
+          <button>P</button>
+          <button>Q</button>
+          <button>R</button>
+          <button>S</button>
+          <button>T</button>
+          <button>U</button>
+          <button>V</button>
+          <button>W</button>
+          <button>X</button>
+          <button>Y</button>
+          <button>Z</button>
+          <button>ENTER</button>
+          <button>
+            <span
+              style="
+                position: absolute;
+                left: -10000px;
+                top: auto;
+                width: 1px;
+                height: 1px;
+                overflow: hidden;
+              "
+              >BACKSPACE</span
+            >
             <svg viewBox="0 0 512 512">
               <path
                 d="M490.667,64H133.077c-7.196,0-13.906,3.627-17.848,9.647L3.485,244.314c-4.647,7.098-4.647,16.274,0,23.372     l111.744,170.667c3.942,6.02,10.652,9.647,17.848,9.647h357.589c11.782,0,21.333-9.551,21.333-21.333V85.333     C512,73.551,502.449,64,490.667,64z M469.333,405.333H144.609L46.833,256l97.776-149.333h324.725V405.333z" />
               <path
                 d="M198.246,356.418c8.331,8.331,21.839,8.331,30.17,0l70.248-70.248l70.248,70.248c8.331,8.331,21.839,8.331,30.17,0     s8.331-21.839,0-30.17L328.834,256l70.248-70.248c8.331-8.331,8.331-21.839,0-30.17s-21.839-8.331-30.17,0l-70.248,70.248     l-70.248-70.248c-8.331-8.331-21.839-8.331-30.17,0c-8.331,8.331-8.331,21.839,0,30.17L268.495,256l-70.248,70.248     C189.915,334.58,189.915,348.087,198.246,356.418z" />
-            </svg>
-          </button>
-        </div>
-      </div>
+            </svg></button
+        ></template>
+      </key-board>
     </main>
+    <footer>
+      <span>Wordle</span>
+    </footer>
   </body>
+  <script>
+    class TileRow extends HTMLElement {
+      constructor() {
+        super();
+
+        const internals = this.attachInternals();
+        let shadow = internals.shadowRoot;
+
+        if (!shadow) {
+          this.attachShadow({ mode: "open" });
+        }
+
+        const row = [...shadow.childNodes].filter(
+          (node) => node.nodeName === "DIV"
+        );
+
+        this.addEventListener("updateGuess", (e) => {
+          const { updatedGuess } = e.detail;
+          for (const tile of row) {
+            tile.textContent = updatedGuess.shift() || "";
+          }
+        });
+
+        this.addEventListener("submitGuess", (e) => {
+          const { word } = e.detail;
+          for (const tile of row) {
+            if (tile.textContent === word.shift()) {
+              tile.style.backgroundColor = "green";
+              continue;
+            }
+            if (word.includes(tile.textContent)) {
+              tile.style.backgroundColor = "yellow";
+              continue;
+            }
+            tile.style.backgroundColor = "red";
+          }
+        });
+      }
+    }
+
+    const generateWord = () => "HELLO";
+
+    class Game {
+      #guesses = [];
+      #word = generateWord().split("");
+      #currentGuess = "";
+
+      get currentGuess() {
+        return this.#currentGuess.split("");
+      }
+
+      get currentRow() {
+        return this.#guesses.length;
+      }
+
+      getCurrentTileRow() {
+        return document.querySelectorAll("tile-row")[this.#guesses.length];
+      }
+
+      set currentGuess(updatedGuess) {
+        if (updatedGuess.length > this.#word.length) return;
+
+        this.#currentGuess = updatedGuess.join("");
+        this.getCurrentTileRow().dispatchEvent(
+          new CustomEvent("updateGuess", {
+            detail: { updatedGuess },
+          })
+        );
+      }
+
+      checkGuess() {
+        if (this.#currentGuess.length !== this.#word.length) return;
+
+        this.getCurrentTileRow().dispatchEvent(
+          new CustomEvent("submitGuess", {
+            detail: { word: this.#word },
+          })
+        );
+
+        this.#guesses.push(this.#currentGuess);
+      }
+    }
+
+    const game = new Game();
+
+    class Keyboard extends HTMLElement {
+      #enter = "ENTER";
+      #backspace = "BACKSPACE";
+      #acceptedKeys = [
+        ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+        this.#enter,
+        this.#backspace,
+      ];
+
+      constructor() {
+        super();
+
+        const internals = this.attachInternals();
+
+        let shadow = internals.shadowRoot;
+        if (!shadow) {
+          this.attachShadow({ mode: "open" });
+        }
+
+        const keyboard = shadow.childNodes;
+
+        for (const key of keyboard) {
+          key.addEventListener("click", ({ target }) =>
+            this.handleKeyPress(target.textContent.trim(""))
+          );
+        }
+        document.addEventListener("keydown", ({ key }) =>
+          this.handleKeyPress(key.toUpperCase())
+        );
+      }
+
+      handleKeyPress(key) {
+        if (!this.#acceptedKeys.includes(key)) return;
+        if (key === this.#enter) {
+          game.checkGuess();
+          return;
+        }
+        if (key === this.#backspace) {
+          game.currentGuess = game.currentGuess.slice(0, -1);
+          return;
+        }
+        game.currentGuess = [...game.currentGuess, key];
+      }
+    }
+
+    customElements.define("tile-row", TileRow);
+    customElements.define("key-board", Keyboard);
+  </script>
   <script>
     window.addEventListener("load", () => {
       if ("serviceWorker" in navigator) {

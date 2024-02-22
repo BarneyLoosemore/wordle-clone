@@ -89,13 +89,15 @@ a:focus {
   gap: 0.25rem;
 }
 
-.tile-row {
+.tile-row,
+tile-row {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   grid-gap: 0.25rem;
 }
 
-.tile-row > div {
+.tile-row > div,
+tile-row > div {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,23 +159,22 @@ a:focus {
   cursor: pointer;
 }
 
-.keyboard-row #ENTER,
-#DELETE {
+.keyboard-row #Enter,
+#Backspace {
   flex: 1.5;
 }
 
-.keyboard-row #DELETE {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.keyboard-row #Backspace {
+  display: grid;
+  place-items: center;
 }
 
-.keyboard-row #DELETE > svg {
+.keyboard-row #Backspace > svg {
   fill: white;
   height: 24px;
 }
 
-.keyboard-row #ENTER {
+.keyboard-row #Enter {
   font-size: 12px;
 }
 
@@ -193,4 +194,13 @@ a:focus {
 .toast > p {
   margin: 0;
   font-weight: bold;
+}
+
+.sr-only {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }

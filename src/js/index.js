@@ -8,7 +8,7 @@ import {
   GREEN,
 } from "./constants.js";
 import {
-  updateKeyElement,
+  // updateKeyElement,
   displayUnpermittedWordToast,
   getWord,
 } from "./utils.js";
@@ -28,7 +28,7 @@ const canDeleteLetter = () => gameState.GUESS_LETTER_NUMBER > 1;
 const canEnterGuess = () => gameState.GUESS_LETTER_NUMBER > 5;
 const canAddLetter = () => gameState.GUESS_LETTER_NUMBER <= 5;
 
-[...ALPHABET, ENTER, BACKSPACE].split("").forEach((key) => {
+[...ALPHABET, ENTER, BACKSPACE].forEach((key) => {
   const keyboardElement = document.getElementById(key);
   keyboardElement.addEventListener("click", () => handleLetterSelect(key));
 });
@@ -110,12 +110,12 @@ const handleGuess = () => {
 
   for (const [index, el] of letterElements.entries()) {
     const { correct, correctPos } = guessStatus[index];
-    updateKeyElement(el, correct, correctPos);
+    // updateKeyElement(el, correct, correctPos);
   }
 
   for (const { letter, correct, correctPos } of guessStatus) {
     const el = document.getElementById(letter);
-    updateKeyElement(el, correct, correctPos);
+    // updateKeyElement(el, correct, correctPos);
   }
 
   guessLetterNumber = 1;
