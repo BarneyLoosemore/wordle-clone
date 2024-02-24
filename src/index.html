@@ -10,6 +10,8 @@
     <title>Wordle Clone | Poodle 🐕</title>
     <link rel="stylesheet" href="./css/index.css" />
     <link rel="manifest" href="manifest.json" />
+    <script type="module" src="./js/tile-row.js"></script>
+    <script type="module" src="./js/key-board.js"></script>
   </head>
   <body>
     <header class="header">
@@ -29,66 +31,26 @@
       </a>
     </header>
     <main>
-      <style>
-        tile-row {
-          display: grid;
-          grid-template-columns: repeat(5, minmax(0, 1fr));
-          grid-gap: 0.5rem;
-          margin-top: 2rem;
-        }
-      </style>
-      <tile-row>
-        <template shadowrootmode="open"
-          ><style>
-            div {
-              background-color: #f0f0f0;
-              border-radius: 0.25rem;
-              width: 4rem;
-              height: 4rem;
-              text-align: center;
-              font-size: 2rem;
-              font-weight: bold;
-              color: #333;
-            }
-          </style>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div
-        ></template>
-      </tile-row>
+      <section>
+        <tile-row></tile-row>
+        <tile-row></tile-row>
+        <tile-row></tile-row>
+        <tile-row></tile-row>
+        <tile-row></tile-row>
+      </section>
 
       <key-board>
         <template shadowrootmode="open"
-          ><button>A</button>
-          <button>B</button>
-          <button>C</button>
-          <button>D</button>
-          <button>E</button>
-          <button>F</button>
-          <button>G</button>
-          <button>H</button>
-          <button>I</button>
-          <button>J</button>
-          <button>K</button>
-          <button>L</button>
-          <button>M</button>
-          <button>N</button>
-          <button>O</button>
-          <button>P</button>
-          <button>Q</button>
-          <button>R</button>
-          <button>S</button>
-          <button>T</button>
-          <button>U</button>
-          <button>V</button>
-          <button>W</button>
-          <button>X</button>
-          <button>Y</button>
-          <button>Z</button>
-          <button>ENTER</button>
-          <button>
+          ><button>A</button><button>B</button><button>C</button
+          ><button>D</button><button>E</button><button>F</button
+          ><button>G</button><button>H</button><button>I</button
+          ><button>J</button><button>K</button><button>L</button
+          ><button>M</button><button>N</button><button>O</button
+          ><button>P</button><button>Q</button><button>R</button
+          ><button>S</button><button>T</button><button>U</button
+          ><button>V</button><button>W</button><button>X</button
+          ><button>Y</button><button>Z</button><button>ENTER</button
+          ><button>
             <span
               style="
                 position: absolute;
@@ -113,139 +75,7 @@
       <span>Wordle</span>
     </footer>
   </body>
-  <script>
-    class TileRow extends HTMLElement {
-      constructor() {
-        super();
 
-        const internals = this.attachInternals();
-        let shadow = internals.shadowRoot;
-
-        if (!shadow) {
-          this.attachShadow({ mode: "open" });
-        }
-
-        const row = [...shadow.childNodes].filter(
-          (node) => node.nodeName === "DIV"
-        );
-
-        this.addEventListener("updateGuess", (e) => {
-          const { updatedGuess } = e.detail;
-          for (const tile of row) {
-            tile.textContent = updatedGuess.shift() || "";
-          }
-        });
-
-        this.addEventListener("submitGuess", (e) => {
-          const { word } = e.detail;
-          for (const tile of row) {
-            if (tile.textContent === word.shift()) {
-              tile.style.backgroundColor = "green";
-              continue;
-            }
-            if (word.includes(tile.textContent)) {
-              tile.style.backgroundColor = "yellow";
-              continue;
-            }
-            tile.style.backgroundColor = "red";
-          }
-        });
-      }
-    }
-
-    const generateWord = () => "HELLO";
-
-    class Game {
-      #guesses = [];
-      #word = generateWord().split("");
-      #currentGuess = "";
-
-      get currentGuess() {
-        return this.#currentGuess.split("");
-      }
-
-      get currentRow() {
-        return this.#guesses.length;
-      }
-
-      getCurrentTileRow() {
-        return document.querySelectorAll("tile-row")[this.#guesses.length];
-      }
-
-      set currentGuess(updatedGuess) {
-        if (updatedGuess.length > this.#word.length) return;
-
-        this.#currentGuess = updatedGuess.join("");
-        this.getCurrentTileRow().dispatchEvent(
-          new CustomEvent("updateGuess", {
-            detail: { updatedGuess },
-          })
-        );
-      }
-
-      checkGuess() {
-        if (this.#currentGuess.length !== this.#word.length) return;
-
-        this.getCurrentTileRow().dispatchEvent(
-          new CustomEvent("submitGuess", {
-            detail: { word: this.#word },
-          })
-        );
-
-        this.#guesses.push(this.#currentGuess);
-      }
-    }
-
-    const game = new Game();
-
-    class Keyboard extends HTMLElement {
-      #enter = "ENTER";
-      #backspace = "BACKSPACE";
-      #acceptedKeys = [
-        ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
-        this.#enter,
-        this.#backspace,
-      ];
-
-      constructor() {
-        super();
-
-        const internals = this.attachInternals();
-
-        let shadow = internals.shadowRoot;
-        if (!shadow) {
-          this.attachShadow({ mode: "open" });
-        }
-
-        const keyboard = shadow.childNodes;
-
-        for (const key of keyboard) {
-          key.addEventListener("click", ({ target }) =>
-            this.handleKeyPress(target.textContent.trim(""))
-          );
-        }
-        document.addEventListener("keydown", ({ key }) =>
-          this.handleKeyPress(key.toUpperCase())
-        );
-      }
-
-      handleKeyPress(key) {
-        if (!this.#acceptedKeys.includes(key)) return;
-        if (key === this.#enter) {
-          game.checkGuess();
-          return;
-        }
-        if (key === this.#backspace) {
-          game.currentGuess = game.currentGuess.slice(0, -1);
-          return;
-        }
-        game.currentGuess = [...game.currentGuess, key];
-      }
-    }
-
-    customElements.define("tile-row", TileRow);
-    customElements.define("key-board", Keyboard);
-  </script>
   <script>
     window.addEventListener("load", () => {
       if ("serviceWorker" in navigator) {
