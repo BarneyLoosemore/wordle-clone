@@ -12,6 +12,7 @@
     <link rel="manifest" href="manifest.json" />
     <script type="module" src="./js/tile-row.js"></script>
     <script type="module" src="./js/key-board.js"></script>
+    <script type="module" src="./js/game.js"></script>
   </head>
   <body>
     <header class="header">
@@ -38,38 +39,7 @@
         <tile-row></tile-row>
         <tile-row></tile-row>
       </section>
-
-      <key-board>
-        <template shadowrootmode="open"
-          ><button>A</button><button>B</button><button>C</button
-          ><button>D</button><button>E</button><button>F</button
-          ><button>G</button><button>H</button><button>I</button
-          ><button>J</button><button>K</button><button>L</button
-          ><button>M</button><button>N</button><button>O</button
-          ><button>P</button><button>Q</button><button>R</button
-          ><button>S</button><button>T</button><button>U</button
-          ><button>V</button><button>W</button><button>X</button
-          ><button>Y</button><button>Z</button><button>ENTER</button
-          ><button>
-            <span
-              style="
-                position: absolute;
-                left: -10000px;
-                top: auto;
-                width: 1px;
-                height: 1px;
-                overflow: hidden;
-              "
-              >BACKSPACE</span
-            >
-            <svg viewBox="0 0 512 512">
-              <path
-                d="M490.667,64H133.077c-7.196,0-13.906,3.627-17.848,9.647L3.485,244.314c-4.647,7.098-4.647,16.274,0,23.372     l111.744,170.667c3.942,6.02,10.652,9.647,17.848,9.647h357.589c11.782,0,21.333-9.551,21.333-21.333V85.333     C512,73.551,502.449,64,490.667,64z M469.333,405.333H144.609L46.833,256l97.776-149.333h324.725V405.333z" />
-              <path
-                d="M198.246,356.418c8.331,8.331,21.839,8.331,30.17,0l70.248-70.248l70.248,70.248c8.331,8.331,21.839,8.331,30.17,0     s8.331-21.839,0-30.17L328.834,256l70.248-70.248c8.331-8.331,8.331-21.839,0-30.17s-21.839-8.331-30.17,0l-70.248,70.248     l-70.248-70.248c-8.331-8.331-21.839-8.331-30.17,0c-8.331,8.331-8.331,21.839,0,30.17L268.495,256l-70.248,70.248     C189.915,334.58,189.915,348.087,198.246,356.418z" />
-            </svg></button
-        ></template>
-      </key-board>
+      <key-board></key-board>
     </main>
     <footer>
       <span>Wordle</span>

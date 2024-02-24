@@ -8,24 +8,31 @@ class Keyboard extends HTMLElement {
   #enter = "ENTER";
   #backspace = "BACKSPACE";
   #acceptedKeys = [
-    ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""),
+    ..."QWERTYUIOPASDFGHJKL".split(""),
     this.#enter,
+    ..."ZXCVBNM".split(""),
     this.#backspace,
   ];
+  #styles = ``;
+  #keyboard;
 
-  constructor() {
-    super();
+  connectedCallback() {
+    const shadowRoot = this.attachShadow({ mode: "open" });
+    const sheet = new CSSStyleSheet();
+    sheet.replace(this.#styles);
+    shadowRoot.adoptedStyleSheets = [sheet];
 
-    const internals = this.attachInternals();
+    this.#keyboard = this.#acceptedKeys.map((key) => {
+      const button = document.createElement("button");
+      button.textContent = key;
+      shadowRoot.appendChild(button);
+      return button;
+    });
+    this.bindEvents();
+  }
 
-    let shadow = internals.shadowRoot;
-    if (!shadow) {
-      this.attachShadow({ mode: "open" });
-    }
-
-    const keyboard = shadow.childNodes;
-
-    for (const key of keyboard) {
+  bindEvents() {
+    for (const key of this.#keyboard) {
       key.addEventListener("click", ({ target }) =>
         this.handleKeyPress(target.textContent.trim(""))
       );
@@ -68,7 +75,7 @@ class Keyboard extends HTMLElement {
   }
 
   getKey(letter) {
-    return this.shadowRoot.childNodes[this.#acceptedKeys.indexOf(letter)];
+    return this.#keyboard[this.#acceptedKeys.indexOf(letter)];
   }
 }
 

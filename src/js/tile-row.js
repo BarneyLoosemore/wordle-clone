@@ -5,6 +5,8 @@ class TileRow extends HTMLElement {
   #styles = `
     div {
       background-color: white;
+      display: grid;
+      place-items: center;
     }
     :host {
       display: grid;
@@ -35,12 +37,12 @@ class TileRow extends HTMLElement {
     sheet.replace(this.#styles);
     shadowRoot.adoptedStyleSheets = [sheet];
 
-    Array.from({ length: 5 }, () => {
+    this.#row = Array.from({ length: 5 }, () => {
       const tile = document.createElement("div");
       shadowRoot.appendChild(tile);
+      return tile;
     });
 
-    this.#row = shadowRoot.childNodes;
     this.bindEvents();
   }
 
@@ -61,6 +63,18 @@ class TileRow extends HTMLElement {
     this.addEventListener("submitGuess", ({ detail: { word } }) =>
       this.determineGuessAccuracy(word)
     );
+
+    this.addEventListener("invalidGuess", () => {
+      const shake = [
+        { transform: "translateX(-10px)" },
+        { transform: "translateX(10px)" },
+        { transform: "translateX(-10px)" },
+      ];
+      this.animate(shake, {
+        duration: 100,
+        iterations: 3,
+      });
+    });
   }
 
   determineGuessAccuracy(word) {
