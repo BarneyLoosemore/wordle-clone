@@ -104,3 +104,16 @@ main {
   padding-bottom: var(--size-3);
   min-height: calc(100dvh - var(--header-height));
 }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 30%;
+  transform: translateX(-50%);
+  padding: var(--size-3) var(--size-4);
+  background-color: var(--grey-3);
+  color: white;
+  border-radius: var(--size-2);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}

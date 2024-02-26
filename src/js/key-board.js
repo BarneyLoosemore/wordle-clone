@@ -109,6 +109,7 @@ class Keyboard extends HTMLElement {
   }
 
   handleKeyPress(key) {
+    document.querySelector(".toast")?.remove();
     if (!this.#acceptedKeys.includes(key)) return;
     if (key === this.#enter) {
       game.checkGuess();
