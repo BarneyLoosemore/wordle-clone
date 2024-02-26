@@ -1,10 +1,13 @@
 const toCache = [
+  "/",
   "/index.html",
   "/index.css",
-  "/index.js",
-  "/permitted-words.js",
-  "/constants.js",
-  "/utils.js",
+  "/js/game.js",
+  "/js/permitted-words.js",
+  "/js/tile-row.js",
+  "/js/key-board.js",
+  "/manifest.json",
+  "/images/dog.png",
 ];
 
 addEventListener("install", (event) => {
@@ -14,6 +17,8 @@ addEventListener("install", (event) => {
     })
   );
 });
+
+console.log("sw");
 
 addEventListener("fetch", (event) => {
   event.respondWith(

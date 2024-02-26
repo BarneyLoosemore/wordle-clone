@@ -1,18 +1,26 @@
+const prefersReducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)"
+)?.matches;
+
 class TileRow extends HTMLElement {
   static tagName = "tile-row";
 
   #row;
   #styles = `
-    div {
-      background-color: white;
-      display: grid;
-      place-items: center;
-    }
     :host {
       display: grid;
-      grid-template: 50px / repeat(5, 50px);
+      grid-template: var(--tile-size) / repeat(5, var(--tile-size));
       gap: 5px;
       margin-bottom: 5px;
+      color: white;
+    }
+    @keyframes flip-tile {
+      0% {
+        transform: rotateY(0);
+      }
+      100% {
+        transform: rotateX(180deg);
+      }
     }
     @keyframes pop-tile {
       0% {
@@ -25,8 +33,15 @@ class TileRow extends HTMLElement {
         transform: scale(1);
       }
     }
+    div {
+      display: grid;
+      place-items: center;
+      border: 2px solid #3a3a3c;
+      font-size: var(--size-7);
+      font-weight: bold;
+    }
     .letter-added {
-      border-color: #767676;
+      border-color: #565758;
       animation: pop-tile 0.075s ease-in-out;
     }
   `;
@@ -65,6 +80,7 @@ class TileRow extends HTMLElement {
     );
 
     this.addEventListener("invalidGuess", () => {
+      if (prefersReducedMotion) return;
       const shake = [
         { transform: "translateX(-10px)" },
         { transform: "translateX(10px)" },
@@ -77,30 +93,51 @@ class TileRow extends HTMLElement {
     });
   }
 
-  determineGuessAccuracy(word) {
-    const row = [...this.shadowRoot.childNodes].filter(
-      (node) => node.nodeName === "DIV"
-    ); // TODO
+  updateTile(tile, accuracy, index) {
+    const flipAnimation = [
+      { transform: `rotateX(0)` },
+      {
+        transform: `rotateX(90deg)`,
+        backgroundColor: `var(--color-${accuracy})`,
+      },
+      {
+        transform: `rotateX(0deg)`,
+        backgroundColor: `var(--color-${accuracy})`,
+        border: "none",
+      },
+    ];
 
-    // TODO: Refactor this to be more functional?
-    const wordLettersLeft = row.map((tile, index) => {
-      if (tile.textContent === word[index]) {
-        tile.style.backgroundColor = "green";
-        return null;
-      }
-      tile.style.backgroundColor = "red";
-      return word[index];
+    const animation = tile.animate(flipAnimation, {
+      duration: 400,
+      fill: "forwards",
+      delay: index * 250,
     });
 
-    const tilesLeftToCheck = row.filter(
-      (tile) => tile.style.backgroundColor !== "green"
-    );
+    animation.commitStyles();
 
-    for (const [index, tile] of tilesLeftToCheck.entries()) {
-      if (wordLettersLeft.includes(tile.textContent)) {
-        tile.style.backgroundColor = "yellow";
-        wordLettersLeft[wordLettersLeft.indexOf(tile.textContent)] = null;
-      }
+    if (prefersReducedMotion) animation.finish();
+  }
+
+  determineGuessAccuracy(word) {
+    const wordLetters = [...word];
+    const accuracy = Array(wordLetters.length).fill("mismatch");
+    const guessLetters = this.#row.map((tile) => tile.textContent);
+
+    for (const [index, letter] of guessLetters.entries()) {
+      if (!(letter === wordLetters[index])) continue;
+      wordLetters[index] = null;
+      accuracy[index] = "match";
+    }
+
+    for (const [index, letter] of guessLetters.entries()) {
+      if (!wordLetters.includes(letter)) continue;
+      const letterIndex = wordLetters.indexOf(letter);
+      wordLetters[letterIndex] = null;
+      accuracy[index] = "close";
+    }
+
+    for (const [index, letterAccuracy] of accuracy.entries()) {
+      this.updateTile(this.#row[index], letterAccuracy, index);
     }
   }
 }

@@ -1,8 +1,6 @@
-const generateWord = () => "HELLO";
-
 export class Game {
   #guesses = [];
-  #word = generateWord().split("");
+  #word = "HELLO".split(""); // TODO: generate random word
   #currentGuess = "";
   #maxGuesses = 5;
   #permittedWords;
@@ -29,8 +27,17 @@ export class Game {
     this.#permittedWords = (await import("./permitted-words.js")).default;
   }
 
-  #idleLoadPermittedWords() {
-    requestIdleCallback(() => this.#loadPermittedWords());
+  async #idleLoadPermittedWords() {
+    if ("requestIdleCallback" in window) {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      requestIdleCallback(() => {
+        if (!this.#permittedWords) {
+          this.#loadPermittedWords();
+        }
+      });
+      return;
+    }
+    setTimeout(() => this.#loadPermittedWords(), 0);
   }
 
   #updateTiles() {
@@ -60,8 +67,8 @@ export class Game {
     );
   }
 
-  checkGuess() {
-    if (!this.#permittedWords) this.loadPermittedWords();
+  async checkGuess() {
+    if (!this.#permittedWords) await this.#loadPermittedWords();
 
     const isValidWord = this.#permittedWords.includes(this.#currentGuess);
     const isCorrectLength = this.#currentGuess.length === this.#word.length;
@@ -90,9 +97,7 @@ export class Game {
   #reset() {
     // TODO: implement reset/play again/etc. button + modal
     this.#guesses = [];
-    this.#word = generateWord().split("");
+    this.#word = "HELLO".split("");
     this.#currentGuess = "";
   }
 }
-
-const game = new Game();
