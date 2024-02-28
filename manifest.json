@@ -3,6 +3,7 @@
   "description": "A simple word game",
   "background_color": "white",
   "display": "standalone",
+  "start_url": "/",
   "scope": "/",
   "icons": [
     {
