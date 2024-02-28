@@ -16,7 +16,7 @@ class Keyboard extends HTMLElement {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 500px;
+    max-width: 550px;
     width: 100%;
     padding: 0 var(--size-2);
     gap: var(--size-2);
@@ -34,13 +34,13 @@ class Keyboard extends HTMLElement {
     &:last-child {
       & button:first-child {
         flex: 1.5;
-        font-size: var(--size-3);
-        font-weight: normal;
+        font-size: var(--size-4);
+        font-weight: bold;
       }
       & button:last-child {
         flex: 1.5;
-        font-size: var(--size-5);
-        font-weight: normal;
+        font-size: var(--size-6);
+        font-weight: bold;
       }
     }
   }
@@ -50,15 +50,12 @@ class Keyboard extends HTMLElement {
     border: 0;
     padding: 0;
     border-radius: 5px;
-    background-color: var(--grey-4);
+    background-color: var(--grey-3);
     color: white;
     font-size: var(--size-5);
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.1s;
-    &:hover {
-      background-color: var(--grey-3);
-    }
   }
   `;
   #keyboard;
@@ -89,17 +86,31 @@ class Keyboard extends HTMLElement {
     this.bindEvents();
   }
 
+  animateKey(key) {
+    key.animate(
+      [
+        { transform: "scale(1)", backgroundColor: "var(--grey-4)" },
+        { transform: "scale(0.95)" },
+        { transform: "scale(1)" },
+      ],
+      { duration: 100, easing: "cubic-bezier(0,.04,.88,.15)" }
+    );
+  }
+
   bindEvents() {
     for (const key of this.#keyboard) {
       key.addEventListener("click", ({ target }) => {
-        if (target.textContent === "⌫")
-          return this.handleKeyPress(this.#backspace);
-        this.handleKeyPress(target.textContent.trim(""));
+        const letter =
+          target.textContent === "⌫"
+            ? this.#backspace
+            : target.textContent.trim("");
+        this.handleKeyPress(letter);
       });
     }
     document.addEventListener("keydown", (event) => {
       if (document.activeElement.tagName === "KEY-BOARD") return;
-      this.handleKeyPress(event.key.toUpperCase());
+      const letter = event.key.toUpperCase();
+      this.handleKeyPress(letter);
     });
 
     this.addEventListener("updateKeys", ({ detail }) => {
@@ -110,6 +121,10 @@ class Keyboard extends HTMLElement {
 
   handleKeyPress(key) {
     document.querySelector(".toast")?.remove();
+
+    const keyElement = this.getKey(key);
+    if (keyElement) this.animateKey(keyElement);
+
     if (!this.#acceptedKeys.includes(key)) return;
     if (key === this.#enter) {
       game.checkGuess();
@@ -124,15 +139,16 @@ class Keyboard extends HTMLElement {
 
   handleUpdateKeys(updatedGuess, word) {
     for (const [index, letter] of updatedGuess.entries()) {
+      const key = this.getKey(letter);
       if (letter === word[index]) {
-        this.getKey(letter).style.backgroundColor = "var(--color-match)";
+        key.style.backgroundColor = "var(--color-match)";
         continue;
       }
       if (word.includes(letter)) {
-        this.getKey(letter).style.backgroundColor = "var(--color-close)";
+        key.style.backgroundColor = "var(--color-close)";
         continue;
       }
-      this.getKey(letter).style.backgroundColor = "var(--color-mismatch)";
+      key.style.backgroundColor = "var(--color-mismatch)";
     }
   }
 

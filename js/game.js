@@ -32,7 +32,7 @@ export class Game {
   async #generateWord() {
     const wordList = (await import("./word-list.js")).default;
     const randomIndex = Math.floor(Math.random() * wordList.length);
-    this.#word = wordList[randomIndex].split("");
+    this.#word = "DISCS".split("");
   }
 
   async #loadPermittedWords() {

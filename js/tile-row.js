@@ -36,12 +36,12 @@ class TileRow extends HTMLElement {
     div {
       display: grid;
       place-items: center;
-      border: 2px solid #3a3a3c;
+      border: 2px solid var(--grey-2);
       font-size: var(--size-7);
       font-weight: bold;
     }
     .letter-added {
-      border-color: #565758;
+      border-color: var(--grey-3);
       animation: pop-tile 0.075s ease-in-out;
     }
   `;
@@ -130,7 +130,9 @@ class TileRow extends HTMLElement {
     }
 
     for (const [index, letter] of guessLetters.entries()) {
-      if (!wordLetters.includes(letter)) continue;
+      if (!wordLetters.includes(letter) || accuracy[index] === "match")
+        continue;
+
       const letterIndex = wordLetters.indexOf(letter);
       wordLetters[letterIndex] = null;
       accuracy[index] = "close";

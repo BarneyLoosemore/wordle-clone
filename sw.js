@@ -1,4 +1,4 @@
-const toCache = [
+const ASSETS = [
   "/",
   "/index.html",
   "/index.css",
@@ -13,15 +13,31 @@ const toCache = [
 addEventListener("install", (event) => {
   event.waitUntil(
     caches.open("v1").then((cache) => {
-      return cache.addAll(toCache);
+      return cache.addAll(ASSETS);
     })
+  );
+});
+
+addEventListener("activate", (event) => {
+  event.waitUntil(
+    (async () => {
+      if (self.registration.navigationPreload) {
+        await self.registration.navigationPreload.enable();
+      }
+    })()
   );
 });
 
 addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
+    (async () => {
+      const cached = await caches.match(event.request);
+      if (cached) return cached;
+
+      const preload = await event.preloadResponse;
+      if (preload) return preload;
+
+      return fetch(event.request);
+    })()
   );
 });

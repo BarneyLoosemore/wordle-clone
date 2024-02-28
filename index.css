@@ -10,7 +10,7 @@
   --base-grey: 0, 0%;
   --grey-1: hsl(var(--base-grey), 10%);
   --grey-2: hsl(var(--base-grey), 25%);
-  --grey-3: hsl(var(--base-grey), 40%);
+  --grey-3: hsl(var(--base-grey), 45%);
   --grey-4: hsl(var(--base-grey), 55%);
 
   --color-match: hsl(115, 35%, 42%);
@@ -20,11 +20,13 @@
   --header-height: 60px;
   --tile-size: 65px;
 
+  --bottom-padding: calc(env(safe-area-inset-bottom, 1rem) * 3);
+
   font-family: system-ui;
 
   @media screen and (max-width: 600px) {
     --tile-size: 55px;
-    font-size: 90%;
+    font-size: 85%;
   }
 }
 
@@ -48,11 +50,6 @@ h2 {
   margin: 0;
 }
 
-ul[role="list"],
-ol[role="list"] {
-  list-style: none;
-}
-
 h1,
 h2,
 button {
@@ -69,19 +66,12 @@ a:not([class]) {
   color: currentColor;
 }
 
-button {
-  background-color: transparent;
-  padding: 0;
-  border-radius: 0;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
-}
-
 body {
   background-color: #121213;
   min-height: 100dvh;
   line-height: 1.5;
+  padding-top: calc(env(safe-area-inset-top) * 1.25);
+  touch-action: none;
 }
 
 header {
@@ -101,7 +91,9 @@ main {
   display: grid;
   place-items: center;
   grid-template-rows: 1fr auto;
-  padding-bottom: var(--size-3);
+  padding-bottom: calc(env(safe-area-inset-bottom) * 3 + 2rem);
+  padding-left: 1rem;
+  padding-right: 1rem;
   min-height: calc(100dvh - var(--header-height));
 }
 
@@ -114,6 +106,6 @@ main {
   background-color: var(--grey-3);
   color: white;
   border-radius: var(--size-2);
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px 0 hsl(var(--base-grey), 10%);
   z-index: 1;
 }
