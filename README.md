@@ -1,6 +1,6 @@
 ## Wordle Clone PWA
 
-A Wordle PWA - no build tools or libraries, static files and web platform features:
+A Wordle PWA - no build tools or external libraries, just static files and web platform features:
 - [x] Web-components 
 - [x] Service worker (+ manifest.json)
 - [x] lazy-loaded word list from a static JS file (`permitted-words.js`)
