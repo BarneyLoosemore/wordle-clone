@@ -1,9 +1,8 @@
 const ASSETS = [
   "/",
-  "/index.html",
-  "/index.css",
   "/js/game.js",
   "/js/permitted-words.js",
+  "/js/word-list.js",
   "/js/tile-row.js",
   "/js/key-board.js",
   "/manifest.json",

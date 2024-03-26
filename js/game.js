@@ -32,7 +32,7 @@ export class Game {
   async #generateWord() {
     const wordList = (await import("./word-list.js")).default;
     const randomIndex = Math.floor(Math.random() * wordList.length);
-    this.#word = "DISCS".split("");
+    this.#word = wordList[randomIndex].split("");
   }
 
   async #loadPermittedWords() {
@@ -70,7 +70,7 @@ export class Game {
     const toast = document.createElement("div");
     toast.role = "alert";
     toast.textContent = text;
-    toast.classList.add("toast");
+    toast.className.add("toast");
     document.body.appendChild(toast);
 
     const animation = toast.animate([{ opacity: 1 }, { opacity: 0 }], {
