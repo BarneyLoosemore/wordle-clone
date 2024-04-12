@@ -17,16 +17,6 @@ addEventListener("install", (event) => {
   );
 });
 
-addEventListener("activate", (event) => {
-  event.waitUntil(
-    (async () => {
-      if (self.registration.navigationPreload) {
-        await self.registration.navigationPreload.enable();
-      }
-    })()
-  );
-});
-
 addEventListener("fetch", (event) => {
   event.respondWith(
     (async () => {

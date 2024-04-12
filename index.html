@@ -23,8 +23,8 @@
         --base-grey: 0, 0%;
         --grey-1: hsl(var(--base-grey), 10%);
         --grey-2: hsl(var(--base-grey), 25%);
-        --grey-3: hsl(var(--base-grey), 45%);
-        --grey-4: hsl(var(--base-grey), 55%);
+        --grey-3: hsl(var(--base-grey), 35%);
+        --grey-4: hsl(var(--base-grey), 50%);
 
         --color-match: hsl(115, 35%, 42%);
         --color-close: hsl(50, 80%, 40%);
@@ -104,7 +104,7 @@
         display: grid;
         place-items: center;
         grid-template-rows: 1fr auto;
-        padding-bottom: calc(env(safe-area-inset-bottom) * 3 + 2rem);
+        padding-bottom: calc(env(safe-area-inset-bottom) * 3 + 1rem);
         padding-left: 1rem;
         padding-right: 1rem;
         min-height: calc(100dvh - var(--header-height));
@@ -127,9 +127,7 @@
   <body>
     <header>
       <h1>Werdle ☘️</h1>
-      <a
-        id="source-code"
-        href="https://github.com/BarneyLoosemore/wordle-clone">
+      <a href="https://github.com/BarneyLoosemore/wordle-clone">
         <span>Source</span>
         <svg width="18" height="24" viewBox="0 0 24 24">
           <path

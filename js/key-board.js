@@ -49,8 +49,8 @@ class Keyboard extends HTMLElement {
     flex: 1;
     border: 0;
     padding: 0;
-    border-radius: 5px;
-    background-color: var(--grey-3);
+    border-radius: 4px;
+    background-color: var(--grey-4);
     color: white;
     font-size: var(--size-5);
     font-weight: bold;
@@ -107,6 +107,8 @@ class Keyboard extends HTMLElement {
         this.handleKeyPress(letter);
       });
     }
+
+    // TODO: Refactor
     document.addEventListener("keydown", (event) => {
       if (document.activeElement.tagName === "KEY-BOARD") return;
       const letter = event.key.toUpperCase();

@@ -70,7 +70,7 @@ export class Game {
     const toast = document.createElement("div");
     toast.role = "alert";
     toast.textContent = text;
-    toast.className.add("toast");
+    toast.classList.add("toast");
     document.body.appendChild(toast);
 
     const animation = toast.animate([{ opacity: 1 }, { opacity: 0 }], {
